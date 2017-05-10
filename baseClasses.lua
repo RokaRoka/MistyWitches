@@ -30,6 +30,10 @@ function Part:draw()
 	--specific part draws in child classes
 end
 
+--Other part classes
+require("partClasses")
+
+
 --BASE CLASS - Object
 --STATUS - INCOMPLETE
 Object = Class{
@@ -74,3 +78,14 @@ Object = Class{
 	end
 	--]]
 }
+
+function Object:partSearch(name)
+	--slow and shitty way to search
+	for i = 1, #self.parts do
+		if self.parts[i].name == name then
+			return self.parts[i]
+		end
+	end
+	--if nothing is found, error
+	return nil
+end
