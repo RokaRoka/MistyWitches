@@ -14,7 +14,7 @@ Image = Class{__includes = Part,
 		--]]
 		--if there is an offset or different size, make a quad
 		if offx ~= 0 or offy ~= 0 or w ~= 0 or h ~= 0 then
-			self.quad = (self.offx, self.offy, w, h, self.image:get)
+			self.quad = love.graphics.newQuad(self.offx, self.offy, w, h, self.image:getDimensions())
 		end
 	end
 }
@@ -27,8 +27,35 @@ function Image:draw()
 	end
 end
 
+DebugBox = Class{__includes = Part,
+	init = function(self, parent, name, w, h, color)
+		Part.init(self, parent, name)
+		self.w = w
+		self.h = h
+		self.color = color
+	end
+}
+
+function DebugBox:draw()
+	love.graphics.rectangle("line", self.parent.pos.x, self.parent.pos.y, self.w, self.h)
+end
+
+--COLLISION LAYERS
+layers = {}
+
+--string array for layers
+layers.strings = {"Player", "Boundry", "Platform"}
+
+--define layers
+layers.player = 1
+
+layers.boundry = 2
+
+layers.platform = 3
+
+
 Physics = Class{__includes = Part,
-	init = function(self, parent, name, shape, type, w, h, layers, masks)
+	init = function(self, parent, name, shape, type, w, h, layer, mask)
 		Part.init(self, parent, name)
 
 		--Set Physics base
@@ -43,7 +70,7 @@ Physics = Class{__includes = Part,
 		self.fixture = love.physics.newFixture(self.body, self.shape)
 
 		--set collision layers
-		self.fixture:setCategory(layers)
-		self.fixture:setMask(masks)
+		if layer then self.fixture:setCategory(layer) end
+		if mask then self.fixture:setMask(mask) end
 	end
 }

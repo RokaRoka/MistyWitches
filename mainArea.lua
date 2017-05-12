@@ -10,7 +10,7 @@ end
 
 function main_area:enter(previous, player_pos)
 	--create player with player_pos
-
+	player = Player(player_pos)
 	--create world objects
 
 end

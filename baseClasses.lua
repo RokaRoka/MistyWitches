@@ -22,7 +22,7 @@ Part = Class{
 	end
 }
 
-function Part:update()
+function Part:update(dt)
 	--specific part updates in child classes
 end
 
@@ -46,7 +46,6 @@ Object = Class{
 		
 		--An array for parts
 		self.parts = {}
-		self.part_i = 1
 
 		self.obj_i = Object.obj_i + 1
 		Object.all[self.obj_i] = self
@@ -78,6 +77,18 @@ Object = Class{
 	end
 	--]]
 }
+
+function Object:update(dt)
+	for i = 1, #self.parts do
+		if self.parts[i].active then self.parts[i]:update(dt) end
+	end
+end
+
+function Object:draw()
+	for i = 1, #self.parts do
+		if self.parts[i].active then self.parts[i]:draw() end
+	end
+end
 
 function Object:partSearch(name)
 	--slow and shitty way to search
