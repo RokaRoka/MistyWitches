@@ -1,7 +1,6 @@
 --baseClasses.lua
 
 --BASE CLASS - Debug
---STATUS - INCOMPLETE
 Debug = Class{
 	init = function(self, parent, text)
 		self.parent = parent
@@ -13,7 +12,6 @@ Debug = Class{
 }
 
 --BASE CLASS - Part
---STATUS - INCOMPLETE
 Part = Class{
 	init = function(self, parent, name)
 		self.parent = parent
@@ -35,9 +33,12 @@ require("partClasses")
 
 
 --BASE CLASS - Object
---STATUS - INCOMPLETE
 Object = Class{
 	init = function(self, name, x, y)
+    --add this object to the table
+    self.obj_i = #Object.all
+		table.insert(Object.all, self)
+    
 		self.pos = vector.new(x, y)
 		self.debug = Debug(name.." Spawned!".."(Object "..self.obj_i..")")
 
@@ -46,36 +47,29 @@ Object = Class{
 		
 		--An array for parts
 		self.parts = {}
-
-		self.obj_i = Object.obj_i + 1
-		Object.all[self.obj_i] = self
-		Object.obj_i = self.obj_i
+    --an bool to represent if there are parts to be drawn
+    self.drawable = false
 	end,
-	all = {}, obj_i = 0,
+	all = {},
 
 	updateAll = function(dt)
-		for i = 1, Object.obj_i do
+		for i = 1, #Object.all do
 			local current = Object.all[i]
+      
 			current:update(dt)
 		end
 	end,
 
-	--[[
+	
 	drawAll = function()
-		for i = 1, Object.obj_i do
+		for i = 1, #Object.all do
 			local current = Object.all[i]
 			
-			if current. then
+			if current.drawable then
 				current:draw()
 			end
-			if current.debug.drawable then
-				love.graphics.setColor(current.debug.color)
-				love.graphics.rectangle("line", current.pos.x - (current.w/2), current.pos.y - (current.h/2), current.w, current.h)
-				love.graphics.setColor(255, 255, 255)
-			end
 		end
-	end
-	--]]
+	end	
 }
 
 function Object:update(dt)

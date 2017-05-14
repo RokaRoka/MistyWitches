@@ -2,7 +2,7 @@
 Image = Class{__includes = Part,
 	init = function(self, parent, name, filepath, offx, offy, w, h)
 		Part.init(self, parent, name)
-		self.image = love.graphics.newImage("filepath")
+		self.image = love.graphics.newImage(filepath)
 		
 		self.r = 0
 		self.sx = 1
@@ -16,6 +16,9 @@ Image = Class{__includes = Part,
 		if offx ~= 0 or offy ~= 0 or w ~= 0 or h ~= 0 then
 			self.quad = love.graphics.newQuad(self.offx, self.offy, w, h, self.image:getDimensions())
 		end
+    
+    --the parent is drawable since this part is drawable
+    self.parent.drawable = true
 	end
 }
 
@@ -32,12 +35,17 @@ DebugBox = Class{__includes = Part,
 		Part.init(self, parent, name)
 		self.w = w
 		self.h = h
-		self.color = color
+		self.color = color or {100, 200, 100}
+    
+    --the parent is drawable since this part is drawable
+    self.parent.drawable = true
 	end
 }
 
 function DebugBox:draw()
-	love.graphics.rectangle("line", self.parent.pos.x, self.parent.pos.y, self.w, self.h)
+  love.graphics.setColor(self.color)
+	love.graphics.rectangle("line", self.parent.pos.x - (self.w/2), self.parent.pos.y - (self.h/2), self.w, self.h)
+  love.graphics.setColor(255, 255, 255)
 end
 
 --COLLISION LAYERS

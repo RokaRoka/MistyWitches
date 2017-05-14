@@ -9,12 +9,14 @@ Signal = require("hump.signal")
 require("baseClasses")
 
 function love.load()
+  print("LOVE2D loaded!")
 	--load objects
 	require("objects")
 	--load main area
 	require("mainArea")
 
-	Gamestate.switch(main_area)
+  Gamestate.registerEvents()
+	Gamestate.switch(main_area, vector.new(48, 350))
 end
 
 function love.keypressed(key, scan, isRepeat)
