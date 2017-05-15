@@ -77,8 +77,19 @@ Physics = Class{__includes = Part,
 		end
 		self.fixture = love.physics.newFixture(self.body, self.shape)
 
+    --set userdata to self for collisions
+    self.fixture:setUserData(self)
+
 		--set collision layers
 		if layer then self.fixture:setCategory(layer) end
 		if mask then self.fixture:setMask(mask) end
 	end
 }
+
+function Physics:onCollide(outerFixture)
+  --to be written for each object
+end
+
+function Physics:endCollide(outerFixture)
+  --to be written for each object
+end

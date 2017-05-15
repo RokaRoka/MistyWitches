@@ -17,9 +17,9 @@ function main_area:enter(previous, player_pos)
 	player = Player(player_pos.x, player_pos.y)
 	--create world objects
   platforms = {}
-  platforms[1] = Platform(100, 450, 200, 64)
-  platforms[2] = Platform(300, 450, 200, 64)
-  platforms[3] = Platform(500, 450, 200, 64)
+  platforms[1] = Platform(100, 600 - 96, 200, 64)
+  platforms[2] = Platform(300, 600 - 96, 200, 64)
+  platforms[3] = Platform(500, 600 - 96, 200, 64)
 end
 
 function main_area:update(dt)
@@ -44,4 +44,14 @@ function main_area:leave()
 	--destroy UI
 end
 
-function beginContact(
+function beginContact(fixtureA, fixtureB, contact)
+  --test if there if fixtureA has a reaction to fixtureB
+  fixtureA:getUserData():onCollide(fixtureB)
+  --or viceversa
+end
+
+function endContact(fixtureA, fixtureB, contact)
+  --test if there if fixtureA has a reaction to fixtureB
+  fixtureA:getUserData():endCollide(fixtureA)
+  --or viceversa
+end

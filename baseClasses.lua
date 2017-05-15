@@ -40,6 +40,7 @@ Object = Class{
 		table.insert(Object.all, self)
     
 		self.pos = vector.new(x, y)
+    self.name = name
 		self.debug = Debug(name.." Spawned!".."(Object "..self.obj_i..")")
 
 		--physical body (parent, x, y, type of body, shape, wr, h)
