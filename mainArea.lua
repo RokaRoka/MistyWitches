@@ -46,12 +46,10 @@ end
 
 function beginContact(fixtureA, fixtureB, contact)
   --test if there if fixtureA has a reaction to fixtureB
-  fixtureA:getUserData():onCollide(fixtureB)
-  --or viceversa
+  fixtureA:getUserData():onCollide(fixtureB, contact)
 end
 
 function endContact(fixtureA, fixtureB, contact)
   --test if there if fixtureA has a reaction to fixtureB
-  fixtureA:getUserData():endCollide(fixtureA)
-  --or viceversa
+  fixtureA:getUserData():endCollide(fixtureA, contact)
 end

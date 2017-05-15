@@ -7,14 +7,16 @@ Image = Class{__includes = Part,
 		self.r = 0
 		self.sx = 1
 		self.sy = 1
-
-		--[[
+    
+    local imgw, imgh = self.image:getDimensions()
+    self.w = w or imgw
+    self.h = h or imgh
 		self.offx = offx or 0
 		self.offy = offy or 0
-		--]]
+
 		--if there is an offset or different size, make a quad
-		if offx ~= 0 or offy ~= 0 or w ~= 0 or h ~= 0 then
-			self.quad = love.graphics.newQuad(self.offx, self.offy, w, h, self.image:getDimensions())
+		if self.offx ~= 0 or self.offy ~= 0 or {w, h} ~= self.image:getDimensions() then
+			self.quad = love.graphics.newQuad(self.offx, self.offy, self.w, self.h, self.image:getDimensions())
 		end
     
     --the parent is drawable since this part is drawable
@@ -24,9 +26,9 @@ Image = Class{__includes = Part,
 
 function Image:draw()
 	if self.quad then
-		love.graphics.draw(self.image, self.quad, self.parent.pos.x, self.parent.pos.y, self.r, self.sx, self.sy)
+		love.graphics.draw(self.image, self.quad, self.parent.pos.x - (self.w/2), self.parent.pos.y - (self.h/2), self.r, self.sx, self.sy)
 	else
-		love.graphics.draw(self.image, self.parent.pos.x, self.parent.pos.y, self.r, self.sx, self.sy)
+		love.graphics.draw(self.image, self.parent.pos.x - (self.w/2), self.parent.pos.y - (self.h/2), self.r, self.sx, self.sy)
 	end
 end
 
@@ -86,10 +88,10 @@ Physics = Class{__includes = Part,
 	end
 }
 
-function Physics:onCollide(outerFixture)
+function Physics:onCollide(outerFixture, contact)
   --to be written for each object
 end
 
-function Physics:endCollide(outerFixture)
+function Physics:endCollide(outerFixture, contact)
   --to be written for each object
 end

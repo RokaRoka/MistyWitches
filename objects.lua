@@ -73,14 +73,14 @@ Player = Class{__includes = Object,
 		--physics
 		self.parts[1] = Physics(self, "pBody", "rectangle", "dynamic", 32, 64, layers.player)
 		--image
-		--part[2] = Image(
+		self.parts[2] = Image(self, "img_idle", "Assets/player_idle.png") 
 		--playercontrol
 		self.parts[3] = PlayerControl(self, "player_control", self.parts[1], Player.speed, Player.jump)
-		self.parts[2] = DebugBox(self, "box1", 32, 64)
+		--self.parts[2] = DebugBox(self, "box1", 32, 64)
     
     --define new onCollide function
-    self.parts[1].onCollide = function (self, otherFixture)
-      if otherFixture:getUserData().parent.name == "platform" then 
+    self.parts[1].onCollide = function (self, otherFixture, contact)
+      if otherFixture:getUserData().parent.name == "platform" then
         print("Jump returned!")
         self.parent.parts[3].canJump = true end
     end
@@ -104,3 +104,5 @@ Platform = Class{__includes = Object,
     print(self.name.." created")
   end
 }
+
+--OBSTACLE
