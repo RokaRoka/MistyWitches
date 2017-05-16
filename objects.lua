@@ -71,38 +71,43 @@ Player = Class{__includes = Object,
 
 		--create parts
 		--physics
-		self.parts[1] = Physics(self, "pBody", "rectangle", "dynamic", 32, 64, layers.player)
+		self.parts[1] = Physics(self, "pBodypart", "rectangle", "dynamic", 32, 64, layers.player)
 		--image
 		self.parts[2] = Image(self, "img_idle", "Assets/player_idle.png") 
 		--playercontrol
-		self.parts[3] = PlayerControl(self, "player_control", self.parts[1], Player.speed, Player.jump)
+		self.parts[3] = PlayerControl(self, "playerControlpart", self.parts[1], Player.speed, Player.jump)
 		--self.parts[2] = DebugBox(self, "box1", 32, 64)
     
     --define new onCollide function
     self.parts[1].onCollide = function (self, otherFixture, contact)
+      --local nx, ny = contact:getNormal()
       if otherFixture:getUserData().parent.name == "platform" then
         print("Jump returned!")
         self.parent.parts[3].canJump = true end
     end
-    
-    print("player created")
 	end,
   speed = 75, jump = 100
 }
 
 Platform = Class{__includes = Object,
-  init = function(self, x, y, w, h)
+  init = function(self, x, y, w, h, imgpath)
     Object.init(self, "platform", x, y)
     
     --create parts
 		--physics
-		self.parts[1] = Physics(self, "pBody", "rectangle", "static", w, h, layers.platform, layers.platform)
+		self.parts[1] = Physics(self, "pBodypart", "rectangle", "static", w, h, layers.platform, layers.platform)
 		--image
 		--self.parts[2] = Image(
-		self.parts[2] = DebugBox(self, "box1", w, h)
-    
-    print(self.name.." created")
+		self.parts[2] = DebugBox(self, "box1part", w, h)
   end
 }
 
---OBSTACLE
+Background = Class{__includes = Object,
+  init = function(self, tiledata, imgpath)
+    --create with x and y as center
+    Object.init(self, "BG", (128 * #tiledata)/2, 544/2)
+    
+    self.tiledata = tiledata
+    self.parts[1] = BgImage(self, "BGpart", imgpath, tiledata)
+  end
+}

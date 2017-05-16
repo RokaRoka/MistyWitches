@@ -1,6 +1,6 @@
 --partClasses.lua
 Image = Class{__includes = Part,
-	init = function(self, parent, name, filepath, offx, offy, w, h)
+	init = function(self, parent, name, filepath, offx, offy, qw, qh)
 		Part.init(self, parent, name)
 		self.image = love.graphics.newImage(filepath)
 		
@@ -9,14 +9,14 @@ Image = Class{__includes = Part,
 		self.sy = 1
     
     local imgw, imgh = self.image:getDimensions()
-    self.w = w or imgw
-    self.h = h or imgh
+    self.qw = qw or imgw
+    self.qh = qh or imgh
 		self.offx = offx or 0
 		self.offy = offy or 0
 
 		--if there is an offset or different size, make a quad
-		if self.offx ~= 0 or self.offy ~= 0 or {w, h} ~= self.image:getDimensions() then
-			self.quad = love.graphics.newQuad(self.offx, self.offy, self.w, self.h, self.image:getDimensions())
+		if self.offx ~= 0 or self.offy ~= 0 or {qw, qh} ~= self.image:getDimensions() then
+			self.quad = love.graphics.newQuad(self.offx, self.offy, self.qw, self.qh, self.image:getDimensions())
 		end
     
     --the parent is drawable since this part is drawable
@@ -26,9 +26,9 @@ Image = Class{__includes = Part,
 
 function Image:draw()
 	if self.quad then
-		love.graphics.draw(self.image, self.quad, self.parent.pos.x - (self.w/2), self.parent.pos.y - (self.h/2), self.r, self.sx, self.sy)
+		love.graphics.draw(self.image, self.quad, self.parent.pos.x - (self.qw/2), self.parent.pos.y - (self.qh/2), self.r, self.sx, self.sy)
 	else
-		love.graphics.draw(self.image, self.parent.pos.x - (self.w/2), self.parent.pos.y - (self.h/2), self.r, self.sx, self.sy)
+		love.graphics.draw(self.image, self.parent.pos.x - (self.qw/2), self.parent.pos.y - (self.qh/2), self.r, self.sx, self.sy)
 	end
 end
 
@@ -48,6 +48,40 @@ function DebugBox:draw()
   love.graphics.setColor(self.color)
 	love.graphics.rectangle("line", self.parent.pos.x - (self.w/2), self.parent.pos.y - (self.h/2), self.w, self.h)
   love.graphics.setColor(255, 255, 255)
+end
+
+BgImage = Class{__includes = Part,
+  init = function(self, parent, name, filepath, tiledata)
+    Part.init(self, parent, name)
+    self.image = love.graphics.newImage(filepath)
+  
+    --initialize tilebatch
+    self.batch = love.graphics.newSpriteBatch(self.image, #tiledata, "static")
+    --sprBat:clear()
+    
+    --co-ordinates for first background, second, etc.
+    local bgtextures = {}
+    --with dark and light dots
+    bgtextures[1] = love.graphics.newQuad(0, 0, 128, 544, self.image:getDimensions())
+    --with cave
+    bgtextures[2] = love.graphics.newQuad(128, 0, 128, 544, self.image:getDimensions())
+    --with dark dots
+    bgtextures[3] = love.graphics.newQuad(256, 0, 128, 544, self.image:getDimensions())
+    --with light dots
+    bgtextures[4] = love.graphics.newQuad(384, 0, 128, 544, self.image:getDimensions())
+    
+    self.handles = {}
+  for i = 1, #tiledata do
+    --add BG tile based on data
+    self.handles[i] = self.batch:add(bgtextures[tiledata[i]], (i * 128) - 128, 0)
+  end
+    --the parent is drawable since this part is drawable
+    self.parent.drawable = true
+  end
+}
+
+function BgImage:draw()
+  love.graphics.draw(self.batch, 0, 0)
 end
 
 --COLLISION LAYERS

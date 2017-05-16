@@ -50,6 +50,8 @@ Object = Class{
 		self.parts = {}
     --an bool to represent if there are parts to be drawn
     self.drawable = false
+    
+    print(self.name.." created")
 	end,
 	all = {},
 
